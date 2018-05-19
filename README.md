@@ -2,16 +2,12 @@
 The documents repository used to build a private cloud.
 
 ##1. 操作系统
-	centos
-	ubuntu
-	sles
+	
+##2. docker
 
-##2. docker安装
-
-##3. minikube安装
-
-##4. kubernetes核心
-	配置
+##3. kubernetes核心
+     配置
+     minikube
 
 ##5. kubernetes扩展
 	计算		资源池，虚拟和物理机
@@ -19,7 +15,6 @@ The documents repository used to build a private cloud.
 	网络		支持不同的网络模型
 			cni
 			lb
-
 	存储		支持不同的存储，对接ceph和nfs，在此基础至少明确csi规范
 	设备		GPU
 	服务		service catalog
