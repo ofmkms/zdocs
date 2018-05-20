@@ -64,7 +64,9 @@ apt-get install ifstop
 # 禁止cdrom安装源
 
 修改apt source list，注释掉cdrom (/etc/apt/sources.list)
+
 原因：
+
 E: Failed to fetch cdrom://Ubuntu-Server 16.04.3 LTS _Xenial Xerus_ - Release amd64 (20170801)/dists/xenial/main/binary-amd64/Packages  Please use apt-cdrom to make this CD-ROM recognized by APT. apt-get update cannot be used to add new CD-ROMs
 
 ```
