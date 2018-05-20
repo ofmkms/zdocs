@@ -6,20 +6,20 @@
 #k8s的层次结构
 ![k8s生态层次](https://i.imgur.com/SUIYZXT.png)
 
-##总体架构（自下而上）：
+## 总体架构（自下而上）：
 	应用生态
 	k8s接口层
 	k8s核心层，包括资源对象，控制器，管控策略
 	API和extension
 	第三方基础设施
-##第三方基础设施
+## 第三方基础设施
 	计算，container runtime interface（CRI）
 	网络，network plugin （CNI）
 	存储卷，volume api
 	镜像， image api（OCI）
 	第三云设施， cloud provider
 	身份认证， rbac sso .etc.
-##API和extension
+## API和extension
 	addon机制
 	api主要起到聚合作用，增加生态融合，包括CRI，CNI，CSI，OAuth，AA（API aggregate）
 	extens主要起到丰富自身作用，同时释放k8s核心的扩展能力，包括custom resource和custom controller，甚至custom scheduler等
