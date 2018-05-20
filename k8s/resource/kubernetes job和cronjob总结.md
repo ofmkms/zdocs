@@ -31,7 +31,6 @@
 - 	 spec值是job规范定义主体部分，是至关重要的。
 	
 	其中job专属属性是：
-```
 		activeDeadlineSeconds
 				最长job存在时间
 		backoffLimit			默认值是6
@@ -49,7 +48,7 @@
 		template，必须部分
 			pod规范，job的业务逻辑。
 			需要定义RestartPolicy，数值可选Never和OnFailure
-```
+
 ## 2.4. 使用
 ## 2.5. 语法
 -		创建语法
