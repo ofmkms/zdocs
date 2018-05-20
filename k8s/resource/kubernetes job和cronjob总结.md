@@ -225,26 +225,34 @@ root@u-s1:~/workspace/jobs# kubectl apply -f zsy-jobs-helloworld.yaml
 job.batch "zsy-job-helloworld" created
 
 - 查看信息
+
+	创建之初：
 ```
-创建之初：
 root@u-s1:~/workspace/jobs# kubectl get job
 NAME                 DESIRED   SUCCESSFUL   AGE
 zsy-job-helloworld   1         0            8s
-
-pod确认：
+```
+	pod确认：
+```
 root@u-s1:~/workspace/jobs# kubectl get pod
 NAME                         READY     STATUS      RESTARTS   AGE
 zsy-job-helloworld-lr9ww     0/1       Completed   0          19s
+```
 
-执行完毕：
+	执行完毕：
+```
 root@u-s1:~/workspace/jobs# kubectl get job
 NAME                 DESIRED   SUCCESSFUL   AGE
 zsy-job-helloworld   1         1            16s
+```
 
-确认结果
+	确认结果
+```
 root@u-s1:~/workspace/jobs# kl zsy-job-helloworld-lr9ww
 helloworld
-
+```
+	删除
+```
 root@u-s1:~/workspace/jobs# kubectl delete -f zsy-jobs-helloworld.yaml 
 job.batch "zsy-job-helloworld" deleted
 
