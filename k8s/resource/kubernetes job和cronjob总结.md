@@ -9,14 +9,17 @@
 # 2. Jobs任务
 ## 2.1. 概念（run to compltion）：
 
-	A job creates one or more pods and ensures that a specified number of them successfully terminate. As pods successfully complete, the job tracks the successful completions.  When a specified number of successful completions is reached, the job itself is complete.  Deleting a Job will cleanup the pods it created.
+	A job creates one or more pods and ensures that a specified number of them successfully terminate. 
+	As pods successfully complete, the job tracks the successful completions.  
+	When a specified number of successful completions is reached, the job itself is complete.  
+	Deleting a Job will cleanup the pods it created.
 
 ** 这里强调一下事情：
 
-- 1.	创建一个和多个pod，并且保障一定量的pod成功终止。
-- 2.	Job跟踪pod的运行结果
-- 3.	如果指定数量的pod运行成功，则job结束，状态为complete
-- 4.	删除job就会删除job运行时产生的pod，如果使用—cascade=false,则不删除pod.
+- 创建一个和多个pod，并且保障一定量的pod成功终止。
+- Job跟踪pod的运行结果
+- 如果指定数量的pod运行成功，则job结束，状态为complete
+- 删除job就会删除job运行时产生的pod，如果使用—cascade=false,则不删除pod.
 
 ## 2.2. Job Spec编写规范
 
