@@ -41,21 +41,21 @@ apt-get install -y ifstop
 
 - 修改root密码
 ```
-	sudo passwd root 
+sudo passwd root 
 ```
 - 修改ssh的配置文件
 ```
-	sudo vi /etc/ssh/sshd_config  
-	#设置PermitRootLogin yes
-	# Authentication:
-	LoginGraceTime 120
-	#PermitRootLogin prohibit-password
-	PermitRootLogin yes  
-	StrictModes yes
+sudo vi /etc/ssh/sshd_config  
+#设置PermitRootLogin yes
+# Authentication:
+LoginGraceTime 120
+#PermitRootLogin prohibit-password
+PermitRootLogin yes  
+StrictModes yes
 ```
 - 重启ssh
 ```
-	sudo service ssh restart   
+sudo service ssh restart   
 ```
 
 # 禁止swap
@@ -85,5 +85,10 @@ apt install docker.io
 # 安装minikube和kubectl
 
 ```
+#install minikube
+curl -Lo minikube https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64 && chmod +x minikube && sudo mv minikube /usr/local/bin/
+
+#install kubectl
+curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl && chmod +x kubectl && sudo mv kubectl /usr/local/bin/
 
 ```
