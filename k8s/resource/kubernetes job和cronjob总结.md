@@ -51,19 +51,20 @@
 
 ## 2.4. 使用
 ## 2.5. 语法
--		创建语法
+	创建语法
 ```
 kubectl apply -f zsy-jobs-helloworld.yaml
 ```
--		删除语法
+	删除语法
 ```
 kubectl delete -f zsy-jobs-helloworld.yaml
 ```
--		查看
+	查看
 ```
 kubectl get jobs
 Kubectl describe jobs
 ```
+
 ## 2.6 分类
 - 非并行Jobs
 	不指定completions和parallelism，他们的默认值是1
