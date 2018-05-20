@@ -1,16 +1,15 @@
 # 关于k8s的几个port的总结：
 
-
-环境说明本例子使用minikube进行说明
-minikube的vm drvier是kvm2，环境信息是：
-宿主机： 192.168.178.143
-minikube vm: 192.168.39.62
+	环境说明本例子使用minikube进行说明
+	minikube的vm drvier是kvm2，环境信息是：
+	宿主机： 192.168.178.143
+	minikube vm: 192.168.39.62
 ----------------------------------------------
 
 
 以kubernetes dashboard为例说明：
 
-```
+``` shell
 root@minikube:~/workspace# kgaa
 NAMESPACE     NAME                                        READY     STATUS    RESTARTS   AGE
 default       pod/hello-minikube-6c47c66d8-bwljq          1/1       Running   0          48m
@@ -47,13 +46,13 @@ root@minikube:~/workspace#
 
 ```
 其中：
-```
+``` shell
 root@minikube:~/workspace# minikube ip
 192.168.39.62
 
 ```
 pod定义
-```
+``` yaml
 root@minikube:~/workspace# kg -n  kube-system  pod/kubernetes-dashboard-5498ccf677-26w4q -o yaml
 apiVersion: v1
 kind: Pod
@@ -196,6 +195,7 @@ status:
 ```
 
 结论：
+
 在宿主机上执行：
 curl -k http://192.168.39.62   成功
 
@@ -204,30 +204,31 @@ curl -k http://172.17.0.3:9090
 curl -k http://10.101.236.234:80
 
 
-说明：
-容器的IP即POD的IP是172.17.0.3端口是9090
-其中172.17.0.3的地址是容器地址或者pod地址。
+** 说明：**
 
-服务地址或者cluster地址是10.101.236.234
-/etc/kubernetes/manifests/kube-apiserver.yaml 
---service-cluster-ip-range=10.96.0.0/12
-96（十进制）=01100000（二进制）
-101（十进制）=01100101（二进制
+	容器的IP即POD的IP是172.17.0.3端口是9090
+	其中172.17.0.3的地址是容器地址或者pod地址。
+
+	服务地址或者cluster地址是10.101.236.234
+	/etc/kubernetes/manifests/kube-apiserver.yaml 
+	--service-cluster-ip-range=10.96.0.0/12
+	96（十进制）=01100000（二进制）
+	101（十进制）=01100101（二进制
 
 
-综上说明：
-	1. k8s dashboard 容器监听在172.17.0.3:9090
-	2. k8s创建service，并且通过label selector和pod绑定，生命服务的port是80，目标pod port是9090,服务部署以后，k8s分配service ip是/10.101.236.234
-		port: 80
-	    protocol: TCP
-	    targetPort: 9090
-	3. 由于需要从主机访问，所以dashboard的service port通过node port的方式暴露，nodeport是30000
-		ports:
-		  - nodePort: 30000
-		  ... ...
-		type: NodePort
+	综上说明：
+		1. k8s dashboard 容器监听在172.17.0.3:9090
+		2. k8s创建service，并且通过label selector和pod绑定，生命服务的port是80，目标pod port是9090,服务部署以后，k8s分配service ip是/10.101.236.234
+			port: 80
+		    protocol: TCP
+		    targetPort: 9090
+		3. 由于需要从主机访问，所以dashboard的service port通过node port的方式暴露，nodeport是30000
+			ports:
+			  - nodePort: 30000
+			  ... ...
+			type: NodePort
 
-类似的例子， service/hello-minikube访问方式是：
+	类似的例子， service/hello-minikube访问方式是：
 ```
 root@minikube:~/workspace# curl -k http://192.168.39.62:30543
 CLIENT VALUES:
