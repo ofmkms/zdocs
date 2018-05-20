@@ -1,6 +1,6 @@
 # minikube install
 
-# driver none
+# driver为none
 
 ## 启动脚本
 
@@ -45,7 +45,7 @@ root@minikube:~/workspace#
 
 ```
 	
-# driver 为kvm2/kvm
+# driver为kvm2/kvm
 
 ## 安装依赖
 
@@ -81,6 +81,7 @@ curl -LO https://github.com/dhiltgen/docker-machine-kvm/releases/download/v0.10.
 ``` shell
 minikube start --vm-driver=kvm2
 ```
+or
 ``` shell
 minikube start --vm-driver=kvm
 ```
@@ -111,5 +112,3 @@ ssh docker@ip
 ssh -i ./id_rsa docker@192.168.39.158
 其中id_rsa文件在：~/.minikube/machines/minikube
 ```
-
-
