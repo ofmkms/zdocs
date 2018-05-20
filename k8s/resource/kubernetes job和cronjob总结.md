@@ -80,6 +80,7 @@ https://kubernetes.io/docs/tasks/job/parallel-processing-expansion/
 	首先解释cron（计划）
 	cron是操作系统实现基于时间的job调度工具，job执行计划通过crontab配置，crontab格式如下：
 	
+``` shell
 # ┌───────────── minute (0 - 59)
 # │ ┌───────────── hour (0 - 23)
 # │ │ ┌───────────── day of month (1 - 31)
@@ -89,11 +90,15 @@ https://kubernetes.io/docs/tasks/job/parallel-processing-expansion/
 # │ │ │ │ │
 # │ │ │ │ │
 #  *  *  *  *  *  command to execute
-
+```
 举例:
+``` shell
 schedule: "*/1 * * * *"
-	Cronjob的限制	
-1．	不能完全保证执行一次，因此需要jobs幂等
+```
+
+**Cronjob的限制	
+
+- 不能完全保证执行一次，因此需要jobs幂等
 
 ## 3.2. cronjob spec编写规范
 一个cronjob必须包括：apiVersion、kind、metadata和spec.
