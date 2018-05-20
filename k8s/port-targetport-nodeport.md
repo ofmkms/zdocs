@@ -194,15 +194,14 @@ status:
 
 ```
 
-结论：
+**结论：**
 
-在宿主机上执行：
-curl -k http://192.168.39.62   成功
+	在宿主机上执行：
+	curl -k http://192.168.39.62   成功
 
-在minikube（192.168.39.62）执行：
-curl -k http://172.17.0.3:9090
-curl -k http://10.101.236.234:80
-
+	在minikube（192.168.39.62）执行：
+	curl -k http://172.17.0.3:9090
+	curl -k http://10.101.236.234:80
 
 **说明：**
 
@@ -216,20 +215,22 @@ curl -k http://10.101.236.234:80
 	101（十进制）=01100101（二进制
 
 
-	综上说明：
-		1. k8s dashboard 容器监听在172.17.0.3:9090
-		2. k8s创建service，并且通过label selector和pod绑定，生命服务的port是80，目标pod port是9090,
-		服务部署以后，k8s分配service ip是/10.101.236.234
-			port: 80
-		    protocol: TCP
-		    targetPort: 9090
-		3. 由于需要从主机访问，所以dashboard的service port通过node port的方式暴露，nodeport是30000
-			ports:
-			  - nodePort: 30000
-			  ... ...
-			type: NodePort
+综上：
+	1. k8s dashboard 容器监听在172.17.0.3:9090
+	2. k8s创建service，并且通过label selector和pod绑定，生命服务的port是80，目标pod port是9090,
+	服务部署以后，k8s分配service ip是/10.101.236.234
+		port: 80
+	    protocol: TCP
+	    targetPort: 9090
+	3. 由于需要从主机访问，所以dashboard的service port通过node port的方式暴露，nodeport是30000
+		ports:
+		  - nodePort: 30000
+		  ... ...
+		type: NodePort
 
-	类似的例子， service/hello-minikube访问方式是：
+
+**举一反三：**
+	service/hello-minikube访问方式是：
 ```
 root@minikube:~/workspace# curl -k http://192.168.39.62:30543
 CLIENT VALUES:
