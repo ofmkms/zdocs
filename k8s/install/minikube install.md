@@ -112,3 +112,24 @@ ssh docker@ip
 ssh -i ./id_rsa docker@192.168.39.158
 其中id_rsa文件在：~/.minikube/machines/minikube
 ```
+# 问题
+- 在使用kvm vm-driver的时候发现问题
+(minikube) Failed to create the VM: virError(Code=9, Domain=20, Message='operation failed: domain 'minikube' already exists with uuid 33168c71-2c21-42d7-b8ab-6cf36d059de2')
+使用-p参数制定新的profile，原因是kvm2启动的时候kvm profile （minikube）已经存在。
+```
+minikube start --vm-driver kvm --v 9 -p minikube-kvm
+```
+- 关于libmachine，kvm vm（boot2docker/minikube.iso），localkube等关系
+
+```
+macOS / Windows/ linux(kvm/kvm2)
+
+minikube -> libmachine -> virtualbox/hyper V -> linux VM -> localkube
+Linux
+
+minikube -> docker -> localkube
+
+Alternatives considered
+```
+
+
