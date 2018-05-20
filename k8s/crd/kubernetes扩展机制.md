@@ -49,14 +49,15 @@
 	- 1.	Custom resources and controllers
 	- 2.	CRD(Custom Resource Definitions)
 	- 3.	API server aggregation 	(API聚合)
-
 	
-在2016年，CoreOS公司基于CRD概念推出了Operator模式。![Operator模式](https://coreos.com/sites/default/files/inline-images/Overview-etcd_0.png)
+  在2016年，CoreOS公司基于CRD概念推出了Operator模式。![Operator模式](https://coreos.com/sites/default/files/inline-images/Overview-etcd_0.png)
 	
-	Operator模式建立在 Kubernetes 资源和控制器概念之上，在用户实现应用业务逻辑以外，用户通过自己编写的管理器，以编程的方式把“运维”逻辑写进了管理器的代码当中，从而实现了应用的运维代码化，而不是手动配置与应用生命周期管理相关的细节。从而降低了分布式系统的负责性。
+	Operator模式建立在 Kubernetes 资源和控制器概念之上，在用户实现应用业务逻辑以外，用户通过自己编写的管理器，
+	以编程的方式把“运维”逻辑写进了管理器的代码当中，从而实现了应用的运维代码化，而不是手动配置与应用生命周期管理相关的细节。
+	从而降低了分布式系统的负责性。
 
 
-## 从哪里扩展--K8s API Server
+## 2.1 从哪里扩展 -- K8s API Server
 
 	首先说明k8s api（server）是什么，一句话，所谓的k8s的api扩展，就是增强原有apiserver的能力，
 	● API-Server is a REST Application with CRUD interface
@@ -70,12 +71,12 @@
 
 ** 重点说明：kube-aggregator 组件是在apiserver进行功能拆分的背景下产生的，这里面有apiserver功能复杂度越来远大的问题，同时k8s核心开发人员集中精力在核心功能的需求
 
-## 扩展什么--Kubernetes的操作对象和扩展对象
-### Object
+## 2.2 扩展什么 -- Kubernetes的操作对象和扩展对象
+### 2.2.1 Object
 record of intent(意愿记录)，用户创建一个k8s object，相当于客户要求k8s 系统完成一个任务，k8s系统就创建object，并且保持object状态是用户预期状态。
 	用户通过kubenetes api创建使用kubectl命令行工具，除此之外也可以使用client libraries.
 	K8s object 描述一般使用yaml文件，包括apiversion，kind，metadata，spec，status。其中前4个是用户指定，后一个k8s系统补足
-### Resource
+### 2.2.2 Resource
 A resource is an endpoint in the Kubernetes API that stores a collection of API objects of a certain kind. For example, the built-in pods resource contains a collection of Pod objects.
 	说白了，就是k8s object通过k8s api展现的形式就是resource.常见的k8s自带resource类型包括：
 ``` shell
@@ -124,14 +125,14 @@ See 'kubectl get -h' for help and examples.
 root@u-s1:~/workspace/crd#
 
 ```
-### custom resource
+### 2.2.3 custom resource
 
 首先custom resource是k8s api的扩展。
 A custom resource is an extension of the Kubernetes API that is not necessarily available on every Kubernetes cluster. In other words, it represents a customization of a particular Kubernetes installation.
 	需要说明的是custom resource可以通过kubectl进行生命周期管理，工作模式和pods类似。
 	Cusom resource就是k8s本身不提供，用户自己创建的resource或者说用户创建的k8s object的展现形式。你要问了，曾经见过的custom resource是什么？后面详述。创建custom resource的过程就是扩展k8s api的过程，即是本文的描述重点。
 
-### controller
+### 2.2.4 controller
 控制器负责解析用户预期resource状态记录，通过不断调整resource，进而达到用户预期状态。
 
 - Reconciliation loops: Observe + Analyze + Act
@@ -141,12 +142,12 @@ A custom resource is an extension of the Kubernetes API that is not necessarily 
 - Cluster aware
 - Actions can be internal to the cluster or external (beginning of service catalog)
 
-### custom controller
+### 2.2.5 custom controller
 	是用户可以在集群部署和更新的controller，custom controller原则上可以和任何resource搭配工作，但是一般在和custom resource一起工作能实现特定效果。
 	其中，Operator模式就是custom controller和custom resource的一种组合方式。
 	Custom controller一般情况下是和custom resource成对出现，即k8s通过custom controller实现对custom resource的控制，进而待定custom resource的预期状态。
 
-## 如何扩展--扩展K8s API 方式
+## 2.3. 如何扩展--扩展K8s API 方式
 
 - CRD(Custom Resource Definitions)
 - AA (API Aggregation)
@@ -154,7 +155,7 @@ A custom resource is an extension of the Kubernetes API that is not necessarily 
 其中CRD相对AA来说不需要编程序，但是AA自由度更高，要求也更高。
 
 
-### Custom Resource Definition
+### 2.3.1 Custom Resource Definition
 	Previously known as TPR（Third Party Resources） ( 1.2 -- 1.7 )
 	Stable from kubernetes 1.8
 	C-R-U-D Object
@@ -163,7 +164,7 @@ A custom resource is an extension of the Kubernetes API that is not necessarily 
 	Versioning
 	Automatic `kubectl` compatibility
 
-#### 实现原理
+#### 2.3.1.1 实现原理
 
 	1．创建CRD，类型是Foo
 ``` shell
@@ -223,7 +224,7 @@ Spec:
 Events:             <none>
 
 ```
-#### 访问方式
+#### 2.3.1.2 访问方式
 ``` shell
 root@u-s1:~/workspace/crd/sample-controller# curl -k https://192.168.178.137:6443/apis/samplecontroller.k8s.io/v1alpha1/namespaces/default/foos/example-foo 
 {
@@ -245,7 +246,7 @@ root@u-s1:~/workspace/crd/sample-controller# curl -k https://192.168.178.137:644
 
 ```
 
-### AA (API Aggregation)
+### 2.3.2 AA (API Aggregation)
 
 理解
 kube-apiserver
@@ -279,14 +280,31 @@ kube-apiserver flags：
 --enable-aggregator-routing=true
 ```
 
-#### 关于AA实现有两种方式：
+#### 2.3.2.1 关于AA实现原理：
 
-	-应用框架加速开发（项目是api-builder  https://github.com/kubernetes-incubator/apiserver-builder）
-	https://github.com/kubernetes/sample-apiserver
+	** 实现方式：
+	- 用户基于api开发
+		k8s社区提供了应用框架加速开发
+		- 应用框架项目：api-builder  https://github.com/kubernetes-incubator/apiserver-builder
+		- 应用实例项目：	https://github.com/kubernetes/sample-apiserver
+	- service-catalog方式
+		同open source service broker实现，参照https://github.com/openservicebrokerapi/servicebroker
+		** 借助第三方力量快速建设云平台的利器
 
-	-service-catalog方式
-	同open source service broker实现，参照https://github.com/openservicebrokerapi/servicebroker
+	** 用户通过api实现扩展开发的流程：
 
+	1. 创建一个namespace
+	2. 创建一个serviceaccount
+	3. serviceaccount绑定 clusterrole  system:auth-delegator权限
+	4. serviceaccount绑定 role extension-apiserver-authentication-reader
+	5. 创建apiserver， 通过deployment或者rc实现
+	6. 通过service暴露apiserver的访问地址
+	7. 创建APIService，本例中含有两个type flunder（比目鱼）和fischer(惠鱼)
+	8. 创建fischer资源
+		kubectl create -f artifacts/fischer/01-fischer.yaml	
+		kg fischer
+    
+    ** 演练
 
 ``` shell
 export GOROOT=/usr/lib/go  #设置为go安装的路径
@@ -421,35 +439,22 @@ root@u-s1:~/workspace/gocode/src/k8s.io/sample-apiserver#
 
 ```
 
-	1. 创建一个namespace
-	2. 创建一个serviceaccount
-	3. serviceaccount绑定 clusterrole  system:auth-delegator权限
-	4. serviceaccount绑定 role extension-apiserver-authentication-reader
-	5. 创建apiserver， 通过deployment或者rc实现
-	6. 通过service暴露apiserver的访问地址
-	7. 创建APIService，本例中含有两个type flunder（比目鱼）和fischer(惠鱼)
-
-	8. 创建fischer资源
-		kubectl create -f artifacts/fischer/01-fischer.yaml	
-		kg fischer
-
-#### 访问方式：
+#### 2.3.2.2 访问方式：
 	https://MASTER_NODE_URL/apis/extensions/v1beta1/namespaces/default/deployments
 	https://MASTER_NODE_URL/api/v1/nodes
 	https://MASTER_NODE_URL/api/v1/namespaces/default/services
 
 
-## Patterns
+## 2.4 扩展Patterns
 - CRD + Volume Plugin + Controller ⇒ Rook
 - CRD + Network Plugin ⇒ Calico Canal
 - CRD + Controller ⇒ Operator
 - CRD + Controller ⇒ core features prototyping
 
-## 参考
+## 3. 参考资料
 
 - Operator模式问世：
 	https://coreos.com/blog/introducing-operators.html
-
 - TPR to CRD
 	https://kubernetes.io/docs/tasks/access-kubernetes-api/extend-api-third-party-resource/
 	https://kubernetes.io/docs/tasks/access-kubernetes-api/migrate-third-party-resource/
