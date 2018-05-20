@@ -27,7 +27,7 @@ NAMESPACE     NAME                           TYPE        CLUSTER-IP       EXTERN
 default       service/hello-minikube         NodePort    10.99.31.210     <none>        8080:30543/TCP   47m
 default       service/kubernetes             ClusterIP   10.96.0.1        <none>        443/TCP          1h
 kube-system   service/kube-dns               ClusterIP   10.96.0.10       <none>        53/UDP,53/TCP    1h
-kube-system   service/kubernetes-dashboard   NodePort    10.101.236.234   <none>        80:30000/TCP     1h
+**kube-system   service/kubernetes-dashboard   NodePort    10.101.236.234   <none>        80:30000/TCP     1h**
 
 NAMESPACE     NAME                        DESIRED   CURRENT   READY     UP-TO-DATE   AVAILABLE   NODE SELECTOR   AGE
 kube-system   daemonset.apps/kube-proxy   1         1         1         1            1           <none>          1h
