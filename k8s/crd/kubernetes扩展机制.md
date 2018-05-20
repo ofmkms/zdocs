@@ -17,15 +17,16 @@
 		- 2.2.5 custom controller
 	- 2.3. 如何扩展--扩展K8s API 方式
 		- 2.3.1 Custom Resource Definition
-			- 2.3.1.1 实现原理
+			- 2.3.1.1 CRD实现原理
 			- 2.3.1.2 访问方式
 		- 2.3.2 AA \(API Aggregation\)
-			- 2.3.2.1 关于AA实现原理：
+			- 2.3.2.1 AA实现原理：
 			- 2.3.2.2 访问方式：
 	- 2.4 扩展Patterns
 	- 3. 参考资料
 
 <!-- /MarkdownTOC -->
+
 
 
 # 1. kubernetes扩展机制
@@ -80,6 +81,8 @@
 	- 1.	Custom resources and controllers
 	- 2.	CRD(Custom Resource Definitions)
 	- 3.	API server aggregation 	(API聚合)
+
+
 	
   在2016年，CoreOS公司基于CRD概念推出了Operator模式。![Operator模式](https://coreos.com/sites/default/files/inline-images/Overview-etcd_0.png)
 	
@@ -196,7 +199,7 @@ A custom resource is an extension of the Kubernetes API that is not necessarily 
 	Versioning
 	Automatic `kubectl` compatibility
 
-#### 2.3.1.1 实现原理
+#### 2.3.1.1 CRD实现原理
 
 	1．创建CRD，类型是Foo
 ``` shell
@@ -312,7 +315,7 @@ kube-apiserver flags：
 --enable-aggregator-routing=true
 ```
 
-#### 2.3.2.1 关于AA实现原理：
+#### 2.3.2.1 AA实现原理：
 
 	** 实现方式：
 	- 用户基于api开发
