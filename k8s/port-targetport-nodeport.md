@@ -7,7 +7,7 @@
 ----------------------------------------------
 
 
-以kubernetes dashboard为例说明：
+**以kubernetes dashboard为例说明：**
 
 ``` shell
 root@minikube:~/workspace# kgaa
@@ -215,7 +215,8 @@ status:
 	101（十进制）=01100101（二进制
 
 
-综上：
+**综上：**
+
 	1. k8s dashboard 容器监听在172.17.0.3:9090
 	2. k8s创建service，并且通过label selector和pod绑定，生命服务的port是80，目标pod port是9090,
 	服务部署以后，k8s分配service ip是/10.101.236.234
@@ -227,7 +228,6 @@ status:
 		  - nodePort: 30000
 		  ... ...
 		type: NodePort
-
 
 **举一反三：**
 	service/hello-minikube访问方式是：
