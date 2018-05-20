@@ -178,9 +178,9 @@ A custom resource is an extension of the Kubernetes API that is not necessarily 
 - Actions can be internal to the cluster or external (beginning of service catalog)
 
 ### 2.2.5 custom controller
-	是用户可以在集群部署和更新的controller，custom controller原则上可以和任何resource搭配工作，但是一般在和custom resource一起工作能实现特定效果。
-	其中，Operator模式就是custom controller和custom resource的一种组合方式。
-	Custom controller一般情况下是和custom resource成对出现，即k8s通过custom controller实现对custom resource的控制，进而待定custom resource的预期状态。
+是用户可以在集群部署和更新的controller，custom controller原则上可以和任何resource搭配工作，但是一般在和custom resource一起工作能实现特定效果。
+其中，Operator模式就是custom controller和custom resource的一种组合方式。
+Custom controller一般情况下是和custom resource成对出现，即k8s通过custom controller实现对custom resource的控制，进而待定custom resource的预期状态。
 
 ## 2.3. 如何扩展--扩展K8s API 方式
 
