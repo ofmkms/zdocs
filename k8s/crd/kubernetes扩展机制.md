@@ -29,6 +29,7 @@
 
 	- 自身组成分为master和slave，并且master和slave可以水平扩展
 	- 确定了基于状态声明的松耦合架构，设计了controller，resource组件以及标准化了基于yaml的表述机制。
+![申明式](https://i.imgur.com/zkT2UcV.png)
 ### 1.1.4 K8s接口层
 
 	- 提供了rest api接口
@@ -74,6 +75,7 @@
 ## 2.2 扩展什么 -- Kubernetes的操作对象和扩展对象
 ### 2.2.1 Object
 record of intent(意愿记录)，用户创建一个k8s object，相当于客户要求k8s 系统完成一个任务，k8s系统就创建object，并且保持object状态是用户预期状态。
+
 	用户通过kubenetes api创建使用kubectl命令行工具，除此之外也可以使用client libraries.
 	K8s object 描述一般使用yaml文件，包括apiversion，kind，metadata，spec，status。其中前4个是用户指定，后一个k8s系统补足
 ### 2.2.2 Resource
