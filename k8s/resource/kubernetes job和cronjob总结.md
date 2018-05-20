@@ -31,24 +31,25 @@
 - 	 spec值是job规范定义主体部分，是至关重要的。
 	
 	其中job专属属性是：
--		activeDeadlineSeconds
+```
+		activeDeadlineSeconds
 				最长job存在时间
--		backoffLimit			默认值是6
+		backoffLimit			默认值是6
 				重试（退避）次数，
--		completions
+		completions
 				期望执行测试
--		manualSelector
+		manualSelector
 				制定jobs和pod的对应关系。
--		parallelism
+		parallelism
 				并行执行job数量，如果parallelism是0，则Job无限等待，可用通过
-kubectl scale  --replicas=$N jobs/zsy-job-helloworld启动
--		Controller通用属性：
--		selector
+				kubectl scale  --replicas=$N jobs/zsy-job-helloworld启动
+		Controller通用属性：
+		selector
 			pod调度用的labelselector，可选部分
--		template，必须部分
+		template，必须部分
 			pod规范，job的业务逻辑。
 			需要定义RestartPolicy，数值可选Never和OnFailure
-
+```
 ## 2.4. 使用
 ## 2.5. 语法
 -		创建语法
