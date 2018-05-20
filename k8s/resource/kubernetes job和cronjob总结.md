@@ -1,14 +1,18 @@
 # 1. Jobs 和cronjob介绍
 
 # 1.1. 基本概念
-	Jobs和cronjob都是kubernetes Controller的一种，其中jobs和cronjob和其他controller的区别是一次运行，运行完成即销毁。cronjob是一种特殊的jobs是在特定时间运行，根据预先设置的规则可以一次运行也可以周期运行。
+
+	Jobs和cronjob都是kubernetes Controller的一种，其中jobs和cronjob和其他controller的区别是一次运行，运行完成即销毁。
+	cronjob是一种特殊的jobs是在特定时间运行，根据预先设置的规则可以一次运行也可以周期运行。
 
 # 2. Jobs任务
 ## 2.1. 概念（run to compltion）：
-A job creates one or more pods and ensures that a specified number of them successfully terminate. 
+```
+	A job creates one or more pods and ensures that a specified number of them successfully terminate. 
 As pods successfully complete, the job tracks the successful completions.  
 When a specified number of successful completions is reached, the job itself is complete.  Deleting a Job will cleanup the pods it created.
-	这里强调一下事情：
+```
+** 这里强调一下事情：
 1.	创建一个和多个pod，并且保障一定量的pod成功终止。
 2.	Job跟踪pod的运行结果
 3.	如果指定数量的pod运行成功，则job结束，状态为complete
@@ -17,10 +21,10 @@ When a specified number of successful completions is reached, the job itself is 
 ## 2.2. Job Spec编写规范
 一个job必须包括：apiVersion、kind、metadata和spec.
 其中：
-	apiVersion值为：batch/v1
-	kind值为：Job
-	metadata值包括 name，labels，namespace等
-	spec值是job规范定义主体部分，是至关重要的。
+	- apiVersion值为：batch/v1
+	- kind值为：Job
+	- metadata值包括 name，labels，namespace等
+	- spec值是job规范定义主体部分，是至关重要的。
 	其中job专属属性是：
 		activeDeadlineSeconds
 				最长job存在时间
