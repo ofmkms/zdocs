@@ -223,6 +223,7 @@ spec:
 ```
 root@u-s1:~/workspace/jobs# kubectl apply -f zsy-jobs-helloworld.yaml 
 job.batch "zsy-job-helloworld" created
+```
 
 - 查看信息
 
