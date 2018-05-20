@@ -26,21 +26,23 @@ root@minikube:~#
 # 安装必要软件
 安装最基本的软件
 ``` shell
-apt-get install openssh-server
-apt-get remove vim-common
-apt-get install vim
-apt-get install ifstat
-apt-get install ifstop
+apt-get remove -y vim-common
+
+apt-get install -y openssh-server
+apt-get install -y vim
+apt-get install -y curl wget
+apt-get install -y ifstat
+apt-get install -y ifstop
 
 
 ```
 # 配置root可以ssh登录
 默认情况下ubuntu16.0.4.3不允许 root ssh login
-- 1. 修改root密码
+-1. 修改root密码
 ```
 	sudo passwd root 
 ```
-- 2. 修改ssh的配置文件
+-2. 修改ssh的配置文件
 ```
 	sudo vi /etc/ssh/sshd_config  
 	#设置PermitRootLogin yes
@@ -50,7 +52,7 @@ apt-get install ifstop
 	PermitRootLogin yes  
 	StrictModes yes
 ```
-- 3. 重启ssh
+-3. 重启ssh
 ```
 	sudo service ssh restart   
 ```
@@ -73,4 +75,14 @@ E: Failed to fetch cdrom://Ubuntu-Server 16.04.3 LTS _Xenial Xerus_ - Release am
 #deb cdrom:[Ubuntu-Server 16.04.3 LTS _Xenial Xerus_ - Release amd64 (20170801)]/ xenial main restricted
 ```
 
+# 安装docker engine
+```
+apt update
+apt install docker.io
 
+```
+# 安装minikube和kubectl
+
+```
+
+```
