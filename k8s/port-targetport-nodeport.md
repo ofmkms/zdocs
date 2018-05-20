@@ -204,7 +204,7 @@ curl -k http://172.17.0.3:9090
 curl -k http://10.101.236.234:80
 
 
-** 说明：**
+**说明：**
 
 	容器的IP即POD的IP是172.17.0.3端口是9090
 	其中172.17.0.3的地址是容器地址或者pod地址。
@@ -218,7 +218,8 @@ curl -k http://10.101.236.234:80
 
 	综上说明：
 		1. k8s dashboard 容器监听在172.17.0.3:9090
-		2. k8s创建service，并且通过label selector和pod绑定，生命服务的port是80，目标pod port是9090,服务部署以后，k8s分配service ip是/10.101.236.234
+		2. k8s创建service，并且通过label selector和pod绑定，生命服务的port是80，目标pod port是9090,
+		服务部署以后，k8s分配service ip是/10.101.236.234
 			port: 80
 		    protocol: TCP
 		    targetPort: 9090
