@@ -38,11 +38,12 @@ apt-get install -y ifstop
 ```
 # 配置root可以ssh登录
 默认情况下ubuntu16.0.4.3不允许 root ssh login
--1. 修改root密码
+
+- 修改root密码
 ```
 	sudo passwd root 
 ```
--2. 修改ssh的配置文件
+- 修改ssh的配置文件
 ```
 	sudo vi /etc/ssh/sshd_config  
 	#设置PermitRootLogin yes
@@ -52,7 +53,7 @@ apt-get install -y ifstop
 	PermitRootLogin yes  
 	StrictModes yes
 ```
--3. 重启ssh
+- 重启ssh
 ```
 	sudo service ssh restart   
 ```
