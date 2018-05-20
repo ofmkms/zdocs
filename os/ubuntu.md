@@ -1,5 +1,10 @@
 # vmware虚拟机安装
 略
+
+**设置：允许虚拟机运行kvm虚拟机，支持vmdriver=kvm2
+	
+	设置--》处理器--》虚拟化引擎--》勾选 “虚拟化Intel VT-x/EPT或AMD-V/RVI(V)”
+
 # 修改主机名
 修改hostname和hosts文件
 ``` shell
