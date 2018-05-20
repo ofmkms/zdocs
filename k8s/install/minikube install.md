@@ -133,3 +133,8 @@ Alternatives considered
 ```
 
 
+# 参考文档：
+https://github.com/kubernetes/minikube/blob/v0.27.0/README.md
+
+
+

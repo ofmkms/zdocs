@@ -1,3 +1,33 @@
+<!-- MarkdownTOC -->
+
+- 1. kubernetes扩展机制
+	- 1.1 k8s的层次结构
+		- 1.1.1 第三方基础设施
+		- 1.1.2 API和extension
+		- 1.1.3 K8S核心层
+		- 1.1.4 K8s接口层
+		- 1.1.5 应用生态
+- 2. k8s在API和extension层面的扩展性
+	- 2.1 从哪里扩展 -- K8s API Server
+	- 2.2 扩展什么 -- Kubernetes的操作对象和扩展对象
+		- 2.2.1 Object
+		- 2.2.2 Resource
+		- 2.2.3 custom resource
+		- 2.2.4 controller
+		- 2.2.5 custom controller
+	- 2.3. 如何扩展--扩展K8s API 方式
+		- 2.3.1 Custom Resource Definition
+			- 2.3.1.1 实现原理
+			- 2.3.1.2 访问方式
+		- 2.3.2 AA \(API Aggregation\)
+			- 2.3.2.1 关于AA实现原理：
+			- 2.3.2.2 访问方式：
+	- 2.4 扩展Patterns
+	- 3. 参考资料
+
+<!-- /MarkdownTOC -->
+
+
 # 1. kubernetes扩展机制
 
    在容器调度领域kubernetes异军突起，除了想google、redhat、ibm这样的大的商业公司支持支持外，自身的架构优势也是其成为这个领域的霸主的关键因素。
