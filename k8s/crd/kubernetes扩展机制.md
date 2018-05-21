@@ -364,7 +364,7 @@ root@u-s1:/etc/kubernetes/manifests# ls kube-apiserver.yaml
 
 #### 2.3.2.1 AA实现原理：
 
-	** 实现方式：
+**实现方式：**
 	- 用户基于api开发
 		k8s社区提供了应用框架加速开发
 		- 应用框架项目： api-builder  https://github.com/kubernetes-incubator/apiserver-builder
@@ -373,7 +373,7 @@ root@u-s1:/etc/kubernetes/manifests# ls kube-apiserver.yaml
 		同open source service broker实现，参照https://github.com/openservicebrokerapi/servicebroker
 		** 借助第三方力量快速建设云平台的利器
 
-	** 用户通过api实现扩展开发的流程：
+**用户通过api实现扩展开发的流程：**
 
 	1. 创建一个namespace
 	2. 创建一个serviceaccount
@@ -386,7 +386,7 @@ root@u-s1:/etc/kubernetes/manifests# ls kube-apiserver.yaml
 		kubectl create -f artifacts/fischer/01-fischer.yaml	
 		kg fischer
     
-    ** 演练
+**演练**
 
 设置golang语言环境和代码环境
 ```
@@ -440,7 +440,7 @@ kg flunder -n wardle -o wide
 kg Fischer -n wardle -o wide
 ```
 
-```
+``` shell
 root@u-s1:~/workspace/gocode/src/k8s.io/sample-apiserver# kubectl create -f artifacts/fischer/01-fischer.yaml -n wardle
 fischer.wardle.k8s.io "my-first-fischer" created
 root@u-s1:~/workspace/gocode/src/k8s.io/sample-apiserver# kg fischer
@@ -466,7 +466,7 @@ root@u-s1:~/workspace/gocode/src/k8s.io/sample-apiserver# kubectl create -f arti
 flunder.wardle.k8s.io "my-first-flunder" created
 ```
 
-```
+``` shell
 root@u-s1:~/workspace/gocode/src/k8s.io/sample-apiserver# kd flunder
 Name:         my-first-flunder
 Namespace:    default
@@ -484,7 +484,7 @@ Status:
 Events:  <none>
 ```
 
-```
+``` shell
 root@u-s1:~/workspace/gocode/src/k8s.io/sample-apiserver# kd flunder
 Name:         my-first-flunder
 Namespace:    default
@@ -505,7 +505,7 @@ root@u-s1:~/workspace/gocode/src/k8s.io/sample-apiserver#
 ```
 
 其他：
-```
+``` shell
 kubectl create clusterrolebinding wardle-apiserver-admin --clusterrole=cluster-admin --serviceaccount=wardle:apiserver -n wardle
 
 kubectl delete clusterrolebinding wardle-apiserver-admin -n wardle
@@ -513,26 +513,26 @@ kubectl delete clusterrolebinding wardle-apiserver-admin -n wardle
 ```
 
 #### 2.3.2.2 访问方式：
-
-	root@u-s1:~/workspace# curl -k https://192.168.178.137:6443/apis/wardle.k8s.io/v1alpha1/namespaces/default/flunders/my-first-flunder
-	{
-	  "kind": "Status",
-	  "apiVersion": "v1",
-	  "metadata": {
-	    
-	  },
-	  "status": "Failure",
-	  "message": "flunders.wardle.k8s.io \"my-first-flunder\" is forbidden: User \"system:anonymous\" cannot get flunders.wardle.k8s.io in the namespace \"default\"",
-	  "reason": "Forbidden",
-	  "details": {
-	    "name": "my-first-flunder",
-	    "group": "wardle.k8s.io",
-	    "kind": "flunders"
-	  },
-	  "code": 403
-	}
-	root@u-s1:~/workspace# 
-
+``` json
+root@u-s1:~/workspace# curl -k https://192.168.178.137:6443/apis/wardle.k8s.io/v1alpha1/namespaces/default/flunders/my-first-flunder
+{
+  "kind": "Status",
+  "apiVersion": "v1",
+  "metadata": {
+    
+  },
+  "status": "Failure",
+  "message": "flunders.wardle.k8s.io \"my-first-flunder\" is forbidden: User \"system:anonymous\" cannot get flunders.wardle.k8s.io in the namespace \"default\"",
+  "reason": "Forbidden",
+  "details": {
+    "name": "my-first-flunder",
+    "group": "wardle.k8s.io",
+    "kind": "flunders"
+  },
+  "code": 403
+}
+root@u-s1:~/workspace# 
+```
 
 ## 2.4 扩展Patterns
 
