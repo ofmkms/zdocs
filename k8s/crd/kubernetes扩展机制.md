@@ -15,6 +15,7 @@
 		- 2.2.3 custom resource
 		- 2.2.4 controller
 		- 2.2.5 custom controller
+		- 2.2.6 REST请求方式：
 	- 2.3. 如何扩展--扩展K8s API 方式
 		- 2.3.1 Custom Resource Definition
 			- 2.3.1.1 CRD实现原理
@@ -173,8 +174,6 @@ See 'kubectl get -h' for help and examples.
 root@u-s1:~/workspace/crd#
 
 ```
-REST请求方式：
-![k8s resource url](https://i.imgur.com/SVFC9Xy.jpg)
 
 ### 2.2.3 custom resource
 
@@ -203,6 +202,10 @@ Cusom resource就是k8s本身不提供，用户自己创建的resource
 
 
 创建custom controller是一个复杂过程，也是扩展k8s api的过程，也是本文的描述重点。
+
+### 2.2.6 REST请求方式：
+![k8s resource url](https://i.imgur.com/SVFC9Xy.jpg)
+
 
 ## 2.3. 如何扩展--扩展K8s API 方式
 
