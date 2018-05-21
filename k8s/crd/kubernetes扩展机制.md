@@ -23,11 +23,9 @@
 			- 2.3.2.1 AA实现原理：
 			- 2.3.2.2 访问方式：
 	- 2.4 扩展Patterns
-	- 3. 参考资料
+- 3. 参考资料
 
 <!-- /MarkdownTOC -->
-
-
 
 # 1. kubernetes扩展机制
 
@@ -128,6 +126,7 @@ record of intent(意愿记录)，用户创建一个k8s object，相当于客户�
 A resource is an endpoint in the Kubernetes API that stores a collection of API objects of a certain kind. For example, the built-in pods resource contains a collection of Pod objects.
 
 	说白了，就是k8s object通过k8s api展现的形式就是resource.常见的k8s自带resource类型包括：
+
 ``` shell
 root@u-s1:~/workspace/crd# kubectl get
 You must specify the type of resource to get. Valid resource types include: 
@@ -182,8 +181,8 @@ REST请求方式：
 首先custom resource是k8s api的扩展。
 	A custom resource is an extension of the Kubernetes API that is not necessarily available on every Kubernetes cluster. In other words, it represents a customization of a particular Kubernetes installation.
 需要说明的是custom resource可以通过kubectl进行生命周期管理，工作模式和pods类似。
+
 Cusom resource就是k8s本身不提供，用户自己创建的resource
-你要问了，custom resource是什么样子？后面详述。
 创建custom resource的过程是扩展k8s api的过程，即是本文的描述重点。
 
 ### 2.2.4 controller
@@ -439,7 +438,9 @@ kubectl delete ns wardle
 ```
 kg flunder -n wardle -o wide
 kg Fischer -n wardle -o wide
+```
 
+```
 root@u-s1:~/workspace/gocode/src/k8s.io/sample-apiserver# kubectl create -f artifacts/fischer/01-fischer.yaml -n wardle
 fischer.wardle.k8s.io "my-first-fischer" created
 root@u-s1:~/workspace/gocode/src/k8s.io/sample-apiserver# kg fischer
@@ -458,8 +459,14 @@ Metadata:
   Self Link:           /apis/wardle.k8s.io/v1alpha1/fischers/my-first-fischer
   UID:                 3b40bea3-5a4a-11e8-8daa-0a580af4016a
 Events:                <none>
+```
+
+```
 root@u-s1:~/workspace/gocode/src/k8s.io/sample-apiserver# kubectl create -f artifacts/flunders/01-flunder.yaml -n wardle
 flunder.wardle.k8s.io "my-first-flunder" created
+```
+
+```
 root@u-s1:~/workspace/gocode/src/k8s.io/sample-apiserver# kd flunder
 Name:         my-first-flunder
 Namespace:    default
@@ -475,7 +482,9 @@ Metadata:
 Spec:
 Status:
 Events:  <none>
+```
 
+```
 root@u-s1:~/workspace/gocode/src/k8s.io/sample-apiserver# kd flunder
 Name:         my-first-flunder
 Namespace:    default
@@ -492,13 +501,14 @@ Spec:
 Status:
 Events:  <none>
 root@u-s1:~/workspace/gocode/src/k8s.io/sample-apiserver# 
+
 ```
 
 其他：
 ```
 kubectl create clusterrolebinding wardle-apiserver-admin --clusterrole=cluster-admin --serviceaccount=wardle:apiserver -n wardle
+
 kubectl delete clusterrolebinding wardle-apiserver-admin -n wardle
-```
 
 ```
 
@@ -520,16 +530,18 @@ kubectl delete clusterrolebinding wardle-apiserver-admin -n wardle
 	    "kind": "flunders"
 	  },
 	  "code": 403
-	}root@u-s1:~/workspace# 
+	}
+	root@u-s1:~/workspace# 
 
 
 ## 2.4 扩展Patterns
+
 - CRD + Volume Plugin + Controller ⇒ Rook
 - CRD + Network Plugin ⇒ Calico Canal
 - CRD + Controller ⇒ Operator
 - CRD + Controller ⇒ core features prototyping
 
-## 3. 参考资料
+# 3. 参考资料
 
 - Operator模式问世：
 	https://coreos.com/blog/introducing-operators.html
@@ -546,5 +558,4 @@ kubectl delete clusterrolebinding wardle-apiserver-admin -n wardle
 	https://github.com/operator-framework/getting-started
 - AA示例
 	https://github.com/kubernetes/sample-controller
-
 
