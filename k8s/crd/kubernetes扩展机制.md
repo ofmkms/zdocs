@@ -74,17 +74,17 @@
 	- Bigdata
 	... ...
 
-**本次聚焦在api和extension部分
+**本次聚焦在api和extension部分**
+
 
 # 2. k8s在API和extension层面的扩展性
-	Kubernetes在侧部分提供了3种扩展方式：
-	- 1.	Custom resources and controllers
-	- 2.	CRD(Custom Resource Definitions)
-	- 3.	API server aggregation 	(API聚合)
+	Kubernetes在这一部分提供了3种扩展方式：
+	- 1. Custom resources and controllers
+	- 2. CRD (Custom Resource Definitions)
+	- 3. AA（API server aggregation）(API聚合)
 
-
-	
-  在2016年，CoreOS公司基于CRD概念推出了Operator模式。![Operator模式](https://coreos.com/sites/default/files/inline-images/Overview-etcd_0.png)
+在2016年，CoreOS公司基于CRD概念推出了Operator模式。
+![Operator模式](https://coreos.com/sites/default/files/inline-images/Overview-etcd_0.png)
 	
 	Operator模式建立在 Kubernetes 资源和控制器概念之上，在用户实现应用业务逻辑以外，用户通过自己编写的管理器，
 	以编程的方式把“运维”逻辑写进了管理器的代码当中，从而实现了应用的运维代码化，而不是手动配置与应用生命周期管理相关的细节。
@@ -98,21 +98,35 @@
 	● API-Server doesn’t know anything about infrastructure
 	● API-Server manages Pods/Deployments/Services like apples and pears (no special meaning)
 	● Object Properties:
-	○ Apiversion
-	○ Kind
-	○ Metadata
-	○ Specs
+		apiversion
+		kind
+		metadata
+		spec
+		status---不需要用户指定，K8s负责更新
 
-** 重点说明：kube-aggregator 组件是在apiserver进行功能拆分的背景下产生的，这里面有apiserver功能复杂度越来远大的问题，同时k8s核心开发人员集中精力在核心功能的需求
+
+提前说明：kube-aggregator 组件是在apiserver进行功能拆分的背景下产生的，这里面有apiserver功能复杂度越来远大的问题，同时k8s核心开发人员集中精力在核心功能的需求
+
+![kube-aggregator](https://i.imgur.com/YssnzN6.jpg)
+``` 
+kube-aggregator provides
+    Provide an API for registering API servers.
+    Summarize discovery information from all the servers.
+    Proxy client requests to individual servers.
+https://github.com/kubernetes/kubernetes/tree/master/staging/src/k8s.io/kube-aggregator
+```
+
 
 ## 2.2 扩展什么 -- Kubernetes的操作对象和扩展对象
 ### 2.2.1 Object
-record of intent(意愿记录)，用户创建一个k8s object，相当于客户要求k8s 系统完成一个任务，k8s系统就创建object，并且保持object状态是用户预期状态。
+record of intent(意愿记录)，用户创建一个k8s object，相当于客户要求k8s系统完成一个任务，k8s系统就创建object，并且保持object状态是用户预期状态。
 
 	用户通过kubenetes api创建使用kubectl命令行工具，除此之外也可以使用client libraries.
-	K8s object 描述一般使用yaml文件，包括apiversion，kind，metadata，spec，status。其中前4个是用户指定，后一个k8s系统补足
+	K8s object 描述一般使用yaml文件，包括apiversion，kind，metadata，spec，status.
+
 ### 2.2.2 Resource
 A resource is an endpoint in the Kubernetes API that stores a collection of API objects of a certain kind. For example, the built-in pods resource contains a collection of Pod objects.
+
 	说白了，就是k8s object通过k8s api展现的形式就是resource.常见的k8s自带resource类型包括：
 ``` shell
 root@u-s1:~/workspace/crd# kubectl get
@@ -160,32 +174,41 @@ See 'kubectl get -h' for help and examples.
 root@u-s1:~/workspace/crd#
 
 ```
+REST请求方式：
+![k8s resource url](https://i.imgur.com/SVFC9Xy.jpg)
+
 ### 2.2.3 custom resource
 
 首先custom resource是k8s api的扩展。
-A custom resource is an extension of the Kubernetes API that is not necessarily available on every Kubernetes cluster. In other words, it represents a customization of a particular Kubernetes installation.
-	需要说明的是custom resource可以通过kubectl进行生命周期管理，工作模式和pods类似。
-	Cusom resource就是k8s本身不提供，用户自己创建的resource或者说用户创建的k8s object的展现形式。你要问了，曾经见过的custom resource是什么？后面详述。创建custom resource的过程就是扩展k8s api的过程，即是本文的描述重点。
+	A custom resource is an extension of the Kubernetes API that is not necessarily available on every Kubernetes cluster. In other words, it represents a customization of a particular Kubernetes installation.
+需要说明的是custom resource可以通过kubectl进行生命周期管理，工作模式和pods类似。
+Cusom resource就是k8s本身不提供，用户自己创建的resource
+你要问了，custom resource是什么样子？后面详述。
+创建custom resource的过程是扩展k8s api的过程，即是本文的描述重点。
 
 ### 2.2.4 controller
 控制器负责解析用户预期resource状态记录，通过不断调整resource，进而达到用户预期状态。
 
-- Reconciliation loops: Observe + Analyze + Act
-- Converge desidered state with real state
-- Attached to infrastructure events (getters & listers & informers)
-- Simple Interface to implement: ADD, UPDATE, DELETE
-- Cluster aware
-- Actions can be internal to the cluster or external (beginning of service catalog)
+	- Reconciliation loops: Observe + Analyze + Act
+	- Converge desidered state with real state
+	- Attached to infrastructure events (getters & listers & informers)
+	- Simple Interface to implement: ADD, UPDATE, DELETE
+	- Cluster aware
+	- Actions can be internal to the cluster or external (beginning of service catalog)
 
 ### 2.2.5 custom controller
-是用户可以在集群部署和更新的controller，custom controller原则上可以和任何resource搭配工作，但是一般在和custom resource一起工作能实现特定效果。
+是用户可以在集群部署和更新的controller，custom controller原则上可以和任何resource搭配工作，
+但是Custom controller一般情况下是和custom resource成对出现，即k8s通过custom controller实现对custom resource的控制，进而确定custom resource的预期状态。
+
 其中，Operator模式就是custom controller和custom resource的一种组合方式。
-Custom controller一般情况下是和custom resource成对出现，即k8s通过custom controller实现对custom resource的控制，进而待定custom resource的预期状态。
+
+
+创建custom controller是一个复杂过程，也是扩展k8s api的过程，也是本文的描述重点。
 
 ## 2.3. 如何扩展--扩展K8s API 方式
 
-- CRD(Custom Resource Definitions)
-- AA (API Aggregation)
+	- CRD(Custom Resource Definitions)
+	- AA (API Aggregation)
 
 其中CRD相对AA来说不需要编程序，但是AA自由度更高，要求也更高。
 
@@ -260,6 +283,7 @@ Events:             <none>
 
 ```
 #### 2.3.1.2 访问方式
+
 ``` shell
 root@u-s1:~/workspace/crd/sample-controller# curl -k https://192.168.178.137:6443/apis/samplecontroller.k8s.io/v1alpha1/namespaces/default/foos/example-foo 
 {
@@ -284,35 +308,59 @@ root@u-s1:~/workspace/crd/sample-controller# curl -k https://192.168.178.137:644
 ### 2.3.2 AA (API Aggregation)
 
 理解
-kube-apiserver
 kube-aggregator 
+kube-apiserver
 
 aggregation layer
 APIService
 extension-apiserver
 	
 说明
+
 kube-apiserver是k8s的关键组成模块，是k8s系统的控制接口。
 
-kube-aggregator k8s模块，负责聚合k8s api server，实现api server的动态注册，动态发现以及安全代理。该模式实现将当天api server进行模块化，一方面提供了普通用户实现自己api server的机制，同时实现了在k8s集群运行时动态增加api的能力，实现这个模块的动因是：
+kube-aggregator k8s模块，负责聚合k8s apiserver，实现api server的动态注册，动态发现以及安全代理。
+该模式实现将当天api server进行模块化，一方面提供了普通用户实现自己api server的机制，同时实现了在k8s集群运行时动态增加api的能力，实现这个模块的动因是：
 1.	扩展性，允许社区用户实现自己的k8s API
 2.	解放核心开发团队review代码压力
 3.	给实验性api一个运行的机制
 4.	规范社区api开发规范，兼容k8s习惯。
 
+
 extension-apiserver是k8s api server的扩展功能模块
-aggregation layer是k8s api server功能扩展层。根据实现技术这里存在两种实现api扩展机制，一种是service-catalog，负责聚合已有的第三方方案，第二种是用户自己开发的模块，k8s提供了一个apiserver-builder项目，进而降低用户开发的难度。aggregation layer运行在kube-apiserver模块中。kube-apiserver负责将API path代理到APIService。
+
+aggregation layer是k8s api server功能扩展层。
+根据实现技术这里存在两种实现api扩展机制，
+- 一种是service-catalog，负责聚合已有的第三方方案，
+- 第二种是用户自己开发的模块，k8s提供了一个apiserver-builder项目，进而降低用户开发的难度。
+aggregation layer运行在kube-apiserver模块中。kube-apiserver负责将API path代理到APIService。
 
 APIService是通过extension-apiserver以集群上pod形式提供的。
 
-总结上面的话，就是用户通过apiserver访问集群，一般访问方式就是API path，在apiserver中的aggregation layer模块根据API path将请求代理到APIService，APIService实现k8s resource和k8s controller业务逻辑。
+总结上面的话，
+extension api server请求流程是：
+1. 用户通过apiserver访问集群，一般访问方式就是API path。
+2. 在apiserver中的aggregation layer模块根据API path将请求代理到APIService。
+3. APIService实现k8s resource和k8s controller业务逻辑。
 	
-通过API聚合方式扩展k8s，涉及的只要组件包括aggregation layer和 APIService，提供APIservice提供 api service实现对象和URL path定义，aggregation layer实现url到object的代理。其中APIService通过extension-apiserver形式部署在k8s集群中实现。extension-apiserver一般情况下包括 Controller和resource两部分，这也是k8s的一般做法。
+通过API聚合方式扩展k8s，涉及的主要组件包括：
+aggregation layer和 APIService，
+其中
+APIservice提供 api service实现对象和URL path定义，
+aggregation layer实现url到object的代理。其中APIService通过extension-apiserver形式部署在k8s集群中实现。extension-apiserver一般情况下包括 Controller和resource两部分，这也是k8s的一般做法。
 
-前提条件：
+前提条件，增加api server配置参数：
 ``` shell
 kube-apiserver flags：
 --enable-aggregator-routing=true
+
+
+root@u-s1:/etc/kubernetes/manifests# ls kube-apiserver.yaml 
+/etc/kubernetes/manifests/kube-apiserver.yaml
+    配置需要增加
+    - --enable-aggregator-routing=true
+#    - --runtime-config=api/all=true,admissionregistration.k8s.io/v1alpha1=true
+   
 ```
 
 #### 2.3.2.1 AA实现原理：
@@ -320,7 +368,7 @@ kube-apiserver flags：
 	** 实现方式：
 	- 用户基于api开发
 		k8s社区提供了应用框架加速开发
-		- 应用框架项目：api-builder  https://github.com/kubernetes-incubator/apiserver-builder
+		- 应用框架项目： api-builder  https://github.com/kubernetes-incubator/apiserver-builder
 		- 应用实例项目：	https://github.com/kubernetes/sample-apiserver
 	- service-catalog方式
 		同open source service broker实现，参照https://github.com/openservicebrokerapi/servicebroker
@@ -341,7 +389,8 @@ kube-apiserver flags：
     
     ** 演练
 
-``` shell
+设置golang语言环境和代码环境
+```
 export GOROOT=/usr/lib/go  #设置为go安装的路径
 export GOPATH=$HOME/workspace/gocode
 export PATH=$PATH:$GOROOT/bin:$GOPATH/bin
@@ -350,38 +399,31 @@ mkdir -p k8s.io
 cd k8s.io
 git clone https://github.com/kubernetes/sample-apiserver.git
 git checkout -b release-1.11
+```
 
-
-
+生成APIService部署用的docker镜像。
+```
 docker build -t 192.168.178.167/base/kube-sample-apiserver:latest ./artifacts/simple-image
 docker push 192.168.178.167/base/kube-sample-apiserver:latest
-
+```
+部署minikube集群，以及在minkube集群上部署通过AA方式开发的k8s扩展
+```
 https://github.com/kubernetes/sample-apiserver/blob/master/docs/minikube-walkthrough.md
-
+```
+创建脚本：
+```
 kubectl create ns wardle
+kubectl create -f artifacts/example/ns.yaml
 kubectl create -f artifacts/example/sa.yaml -n wardle
 kubectl create -f artifacts/example/auth-delegator.yaml -n kube-system
 kubectl create -f artifacts/example/auth-reader.yaml -n kube-system
 kubectl create -f artifacts/example/rc.yaml -n wardle
 kubectl create -f artifacts/example/service.yaml -n wardle
 kubectl create -f artifacts/example/apiservice.yaml
+```
 
-
-
-kubectl delete -f artifacts/flunders/01-flunder.yaml
-kubectl delete -f artifacts/example/apiservice.yaml
-kubectl delete -f artifacts/example/service.yaml -n wardle
-kubectl delete -f artifacts/example/rc.yaml -n wardle
-kubectl delete -f artifacts/example/auth-reader.yaml -n kube-system
-kubectl delete -f artifacts/example/auth-delegator.yaml -n kube-system
-kubectl delete -f artifacts/example/sa.yaml -n wardle
-kubectl delete ns wardle
-
-
-kg flunder -n wardle -o wide
-kg Fischer -n wardle -o wide
-
-
+删除脚本：
+```
 kubectl delete -f artifacts/flunders/01-flunder.yaml
 kubectl delete -f artifacts/example/apiservice.yaml
 kubectl delete -f artifacts/example/service.yaml -n wardle
@@ -390,34 +432,13 @@ kubectl delete -f artifacts/example/auth-reader.yaml -n kube-system
 kubectl delete -f artifacts/example/auth-delegator.yaml -n kube-system
 kubectl delete -f artifacts/example/sa.yaml -n wardle
 kubectl delete -f artifacts/example/ns.yaml
-
 kubectl delete ns wardle
+```
 
-
-kubectl create ns wardle
-
-kubectl create -f artifacts/example/ns.yaml
-kubectl create -f artifacts/example/sa.yaml -n wardle
-kubectl create -f artifacts/example/auth-delegator.yaml -n kube-system
-kubectl create -f artifacts/example/auth-reader.yaml -n kube-system
-kubectl create -f artifacts/example/rc.yaml -n wardle
-kubectl create -f artifacts/example/service.yaml -n wardle
-kubectl create -f artifacts/example/apiservice.yaml
-kubectl create -f artifacts/flunders/01-flunder.yaml
-
-
-
-kubectl create clusterrolebinding wardle-apiserver-admin --clusterrole=cluster-admin --serviceaccount=wardle:apiserver -n wardle
-kubectl delete clusterrolebinding wardle-apiserver-admin -n wardle
-
-
-
-root@u-s1:/etc/kubernetes/manifests# ls kube-apiserver.yaml 
-/etc/kubernetes/manifests/kube-apiserver.yaml
-    配置需要增加
-    - --enable-aggregator-routing=true
-#    - --runtime-config=api/all=true,admissionregistration.k8s.io/v1alpha1=true
-   
+结果确认：
+```
+kg flunder -n wardle -o wide
+kg Fischer -n wardle -o wide
 
 root@u-s1:~/workspace/gocode/src/k8s.io/sample-apiserver# kubectl create -f artifacts/fischer/01-fischer.yaml -n wardle
 fischer.wardle.k8s.io "my-first-fischer" created
@@ -471,13 +492,35 @@ Spec:
 Status:
 Events:  <none>
 root@u-s1:~/workspace/gocode/src/k8s.io/sample-apiserver# 
+```
+
+其他：
+```
+kubectl create clusterrolebinding wardle-apiserver-admin --clusterrole=cluster-admin --serviceaccount=wardle:apiserver -n wardle
+kubectl delete clusterrolebinding wardle-apiserver-admin -n wardle
+```
 
 ```
 
 #### 2.3.2.2 访问方式：
-	https://MASTER_NODE_URL/apis/extensions/v1beta1/namespaces/default/deployments
-	https://MASTER_NODE_URL/api/v1/nodes
-	https://MASTER_NODE_URL/api/v1/namespaces/default/services
+
+	root@u-s1:~/workspace# curl -k https://192.168.178.137:6443/apis/wardle.k8s.io/v1alpha1/namespaces/default/flunders/my-first-flunder
+	{
+	  "kind": "Status",
+	  "apiVersion": "v1",
+	  "metadata": {
+	    
+	  },
+	  "status": "Failure",
+	  "message": "flunders.wardle.k8s.io \"my-first-flunder\" is forbidden: User \"system:anonymous\" cannot get flunders.wardle.k8s.io in the namespace \"default\"",
+	  "reason": "Forbidden",
+	  "details": {
+	    "name": "my-first-flunder",
+	    "group": "wardle.k8s.io",
+	    "kind": "flunders"
+	  },
+	  "code": 403
+	}root@u-s1:~/workspace# 
 
 
 ## 2.4 扩展Patterns
