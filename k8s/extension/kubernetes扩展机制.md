@@ -210,7 +210,6 @@ Cusom resource就是k8s本身不提供，用户自己创建的resource，创建c
 -	CRD(Custom Resource Definitions)
 -	AA (API Aggregation)
 
-
 **其中CRD相对AA来说不需要编程序，但是AA自由度更高，要求也更高。**
 
 ### 2.3.1 Custom Resource Definition
