@@ -1,15 +1,15 @@
 # zdocs
 The documents repository used to build a private cloud.
 
-##1. 操作系统
+## 1. 操作系统
 	
-##2. docker
+## 2. docker
 
-##3. kubernetes核心
+## 3. kubernetes核心
      配置
      minikube
 
-##5. kubernetes扩展
+## 5. kubernetes扩展
 	计算		资源池，虚拟和物理机
 			cri
 	网络		支持不同的网络模型
@@ -25,14 +25,13 @@ The documents repository used to build a private cloud.
 			CRD
 			AA
 
-##6.	场景定义
+## 6.	场景定义
 		运维场景
 		运营场景
 			优雅升级
 
 
-##7. 	应用支持，软件框架
-	
+## 7. 	应用支持，软件框架
 
 	
 
