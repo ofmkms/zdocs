@@ -119,14 +119,14 @@ https://github.com/kubernetes/kubernetes/tree/master/staging/src/k8s.io/kube-agg
 ## 2.2 扩展什么 -- Kubernetes的操作对象和扩展对象
 ### 2.2.1 Object
 record of intent(意愿记录)，用户创建一个k8s object，相当于客户要求k8s系统完成一个任务，k8s系统就创建object，并且保持object状态是用户预期状态。
-
-	用户通过kubenetes api创建使用kubectl命令行工具，除此之外也可以使用client libraries.
-	K8s object 描述一般使用yaml文件，包括apiversion，kind，metadata，spec，status.
+<br>
+用户通过kubenetes api创建使用kubectl命令行工具，除此之外也可以使用client libraries.
+K8s object 描述一般使用yaml文件，包括apiversion，kind，metadata，spec，status.
 
 ### 2.2.2 Resource
 A resource is an endpoint in the Kubernetes API that stores a collection of API objects of a certain kind. For example, the built-in pods resource contains a collection of Pod objects.
-
-	说白了，就是k8s object通过k8s api展现的形式就是resource.常见的k8s自带resource类型包括：
+<br>
+说白了，就是k8s object通过k8s api展现的形式就是resource.常见的k8s自带resource类型包括：
 
 ``` shell
 root@u-s1:~/workspace/crd# kubectl get
@@ -177,12 +177,12 @@ root@u-s1:~/workspace/crd#
 
 ### 2.2.3 custom resource
 
-首先custom resource是k8s api的扩展。
-	A custom resource is an extension of the Kubernetes API that is not necessarily available on every Kubernetes cluster. In other words, it represents a customization of a particular Kubernetes installation.
+首先custom resource是k8s api的扩展。<br>
+	A custom resource is an extension of the Kubernetes API that is not necessarily available on every Kubernetes cluster. In other words, it represents a customization of a particular Kubernetes installation.<br>
 需要说明的是custom resource可以通过kubectl进行生命周期管理，工作模式和pods类似。
 
-Cusom resource就是k8s本身不提供，用户自己创建的resource
-创建custom resource的过程是扩展k8s api的过程，即是本文的描述重点。
+<br>
+Cusom resource就是k8s本身不提供，用户自己创建的resource，创建custom resource的过程是扩展k8s api的过程，即是本文的描述重点。
 
 ### 2.2.4 controller
 控制器负责解析用户预期resource状态记录，通过不断调整resource，进而达到用户预期状态。
@@ -197,23 +197,21 @@ Cusom resource就是k8s本身不提供，用户自己创建的resource
 ### 2.2.5 custom controller
 是用户可以在集群部署和更新的controller，custom controller原则上可以和任何resource搭配工作，
 但是Custom controller一般情况下是和custom resource成对出现，即k8s通过custom controller实现对custom resource的控制，进而确定custom resource的预期状态。
-
+<br>
 其中，Operator模式就是custom controller和custom resource的一种组合方式。
-
-
+<br>
 创建custom controller是一个复杂过程，也是扩展k8s api的过程，也是本文的描述重点。
 
 ### 2.2.6 REST请求方式：
 ![k8s resource url](https://i.imgur.com/SVFC9Xy.jpg)
-
 
 ## 2.3. 如何扩展--扩展K8s API 方式
 
 	- CRD(Custom Resource Definitions)
 	- AA (API Aggregation)
 
-其中CRD相对AA来说不需要编程序，但是AA自由度更高，要求也更高。
 
+**其中CRD相对AA来说不需要编程序，但是AA自由度更高，要求也更高。**
 
 ### 2.3.1 Custom Resource Definition
 	Previously known as TPR（Third Party Resources） ( 1.2 -- 1.7 )
