@@ -1,7 +1,7 @@
 # zdocs
 The documents repository used to build a private cloud.
 
-## 1. 操作系统
+## 1. [操作系统](../os/README.md)
 	
 ## 2. docker
 
@@ -33,7 +33,6 @@ The documents repository used to build a private cloud.
 
 ## 7. 	应用支持，软件框架
 
-	
+
 
 2018-05-19
-
