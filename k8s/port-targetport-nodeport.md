@@ -1,5 +1,6 @@
 # 关于k8s的几个port的总结：
 
+----------------------------------------------
 	环境说明本例子使用minikube进行说明
 	minikube的vm drvier是kvm2，环境信息是：
 	宿主机： 192.168.178.143
@@ -8,6 +9,7 @@
 
 
 **以kubernetes dashboard为例说明：**
+
 
 ``` shell
 root@minikube:~/workspace# kgaa
@@ -251,4 +253,6 @@ user-agent=curl/7.47.0
 BODY:
 -no body in request-
 root@minikube:~/workspace# 
-````
+```
+----------------------------------------------
+

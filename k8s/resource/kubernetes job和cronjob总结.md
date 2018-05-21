@@ -1,3 +1,37 @@
+<!-- MarkdownTOC -->
+
+- 1. Jobs 和cronjob介绍
+- 1.1. 基本概念
+- 2. Jobs任务
+	- 2.1. 概念（run to compltion）：
+	- 2.2. Job Spec编写规范
+	- 2.4. 使用
+	- 2.5. 语法
+	- 2.6 分类
+	- 2.7 特殊用法
+	- 2.8. 实现
+	- 2.9. 高级
+- 3. cronJob计划任务
+	- 3.1.	概念
+	- 3.2. cronjob spec编写规范
+	- 3.3.	使用
+	- 3.3.1.	语法
+	- 3.4. 实现
+- 4. 应用场景
+- 5. 测试
+	- 5.1. 试验一:  helloworld
+		- 1）创建helloworld yaml文件
+		- 2）部署
+		- 3）查看信息
+		- 4）删除
+	- 5.2. 试验二：jobs和pods选择模式（Automatic Mode /Manual Mode）
+		- 1）创建job对象
+		- 2）删除job，但是不删除pods
+		- 3）创建新的job，重复利用原来的pods
+- 6. 参考：
+
+<!-- /MarkdownTOC -->
+
 # 1. Jobs 和cronjob介绍
 
 # 1.1. 基本概念
@@ -33,7 +67,7 @@
 	其中job专属属性是：
 		activeDeadlineSeconds
 				最长job存在时间
-		backoffLimit			默认值是6
+		backoffLimit   默认值是6次
 				重试（退避）次数，
 		completions
 				期望执行测试
@@ -70,13 +104,15 @@ Kubectl describe jobs
 	不指定completions和parallelism，他们的默认值是1
 - 指定完成数量的Jobs，其中并发是1
 	指定completions但是不指定parallelism，其中parallelism是1
-- 指定工作队列的Jobs
+- 指定工作队列的Jobs（批量任务）
 	指定parallelism，但是不指定completions
 
 ## 2.7 特殊用法
-- 指定pod selector，实现job定义修改。参照例子：（zsy-jobs.yaml  zsy-jobs-new.yaml）
-- 关于Pod和Container失败
+- 指定pod selector，实现job定义修改。参照实验二：（zsy-jobs.yaml  zsy-jobs-new.yaml）
+- 关于Pod和Container失败，一般设定：.spec.template.spec.restartPolicy = "Never"
 - 关于backoffLimit和restartPolicy以及completions的关系
+	其中.spec.completions表示预期成功执行次数。
+		backoffLimit默认值是6，表示6次（10s,20s,40s,80s,160,320s），其中要求设置restartPolicy为Never
 
 ## 2.8. 实现
 ```	
@@ -134,7 +170,7 @@ schedule: "*/1 * * * *"
 			缓期启动时间，如果在缓期启动时间之后依然没有启动，就标记为failed
 -		successfulJobsHistoryLimit
 -		failedJobsHistoryLimit
-			成功和失败job数，一般默认值分别是3和1
+			成功和失败job数，一般默认值分别是3和1，为了清除Exit的pod的。
 -		suspend
 			默认是false，如果设置为true，则后续执行job是suspended状态。
 		
@@ -191,7 +227,7 @@ kubernetes/pkg/controller/cronjob/
 # 5. 测试
 ## 5.1. 试验一:  helloworld
 
-- 创建helloworld yaml文件
+### 1）创建helloworld yaml文件
 ```
 #root@u-s1:~/workspace/jobs# cat zsy-jobs-helloworld.yaml 
 apiVersion: batch/v1
@@ -219,14 +255,14 @@ spec:
        name: zsy-job-helloworld
      restartPolicy: Never
 ```
-- 部署
+### 2）部署
 
 ```
 root@u-s1:~/workspace/jobs# kubectl apply -f zsy-jobs-helloworld.yaml 
 job.batch "zsy-job-helloworld" created
 ```
 
-- 查看信息
+### 3）查看信息
 
 	创建之初：
 ```
@@ -253,7 +289,7 @@ zsy-job-helloworld   1         1            16s
 root@u-s1:~/workspace/jobs# kl zsy-job-helloworld-lr9ww
 helloworld
 ```
-	删除
+### 4）删除
 ```
 root@u-s1:~/workspace/jobs# kubectl delete -f zsy-jobs-helloworld.yaml 
 job.batch "zsy-job-helloworld" deleted
@@ -270,6 +306,7 @@ nginx-app-786897f7d7-9rjdd   1/1       Running   0          6d
 
 ## 5.2. 试验二：jobs和pods选择模式（Automatic Mode /Manual Mode）
 
+### 1）创建job对象
 ```
 root@u-s1:~/workspace/jobs# cat zsy-jobs.yaml 
 apiVersion: batch/v1
@@ -302,6 +339,13 @@ spec:
 
 ```
 
+### 2）删除job，但是不删除pods
+```
+kubectl delete -f zsy-jobs.yaml —cascade=false
+
+```
+
+### 3）创建新的job，重复利用原来的pods
 ``` shell
 root@u-s1:~/workspace/jobs# cat zsy-jobs-new.yaml 
 apiVersion: batch/v1
