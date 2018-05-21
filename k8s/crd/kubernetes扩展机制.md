@@ -207,20 +207,20 @@ Cusom resource就是k8s本身不提供，用户自己创建的resource，创建c
 
 ## 2.3. 如何扩展--扩展K8s API 方式
 
-	- CRD(Custom Resource Definitions)
-	- AA (API Aggregation)
+-	CRD(Custom Resource Definitions)
+-	AA (API Aggregation)
 
 
 **其中CRD相对AA来说不需要编程序，但是AA自由度更高，要求也更高。**
 
 ### 2.3.1 Custom Resource Definition
-	Previously known as TPR（Third Party Resources） ( 1.2 -- 1.7 )
-	Stable from kubernetes 1.8
-	C-R-U-D Object
-	RBAC
-	State definition API: declarative
-	Versioning
-	Automatic `kubectl` compatibility
+-	Previously known as TPR（Third Party Resources） ( 1.2 -- 1.7 )
+-	Stable from kubernetes 1.8
+-	C-R-U-D Object
+-	RBAC
+-	State definition API: declarative
+-	Versioning
+-	Automatic `kubectl` compatibility
 
 #### 2.3.1.1 CRD实现原理
 
