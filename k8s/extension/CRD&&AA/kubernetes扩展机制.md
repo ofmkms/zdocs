@@ -331,7 +331,8 @@ extension-apiserver是k8s api server的扩展功能模块
 aggregation layer是k8s api server功能扩展层。
 根据实现技术这里存在两种实现api扩展机制，
 - 一种是service-catalog，负责聚合已有的第三方方案，
-- 第二种是用户自己开发的模块，k8s提供了一个apiserver-builder项目，进而降低用户开发的难度。
+- 第二种是用户自己开发的模块，k8s提供了一个![apiserver-builder](https://github.com/kubernetes-incubator/apiserver-builder)
+项目，进而降低用户开发的难度。
 aggregation layer运行在kube-apiserver模块中。kube-apiserver负责将API path代理到APIService。
 
 APIService是通过extension-apiserver以集群上pod形式提供的。

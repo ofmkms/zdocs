@@ -67,12 +67,12 @@ newgrp libvirtd
 ```
 ### 下载Docker Machine plugin binary
 kvm2
-```
+``` shell
 curl -LO https://storage.googleapis.com/minikube/releases/latest/docker-machine-driver-kvm2 && chmod +x docker-machine-driver-kvm2 && sudo mv docker-machine-driver-kvm2 /usr/local/bin/
 ```
 
 kvm
-```
+``` shell
 curl -LO https://github.com/dhiltgen/docker-machine-kvm/releases/download/v0.10.0/docker-machine-driver-kvm-ubuntu16.04 && chmod +x docker-machine-driver-kvm-ubuntu16.04 && sudo mv docker-machine-driver-kvm-ubuntu16.04 /usr/local/bin/docker-machine-driver-kvm
 
 ```
@@ -86,11 +86,11 @@ or
 minikube start --vm-driver=kvm
 ```
 ### 停止集群
-```
+``` shell
 minikube stop
 ```
 ### 删除集群
-```
+``` shell
 minikube delete
 ```
 

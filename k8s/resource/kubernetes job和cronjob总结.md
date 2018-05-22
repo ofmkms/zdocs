@@ -36,7 +36,7 @@
 
 # 1.1. 基本概念
 
-	Jobs和cronjob都是kubernetes Controller的一种，
+	jobs和cronjob是kubernetes的两种自带的controller，
 	其中jobs和cronjob和其他controller的区别是一次运行，运行完成即销毁。
 	cronjob是一种特殊的jobs是在特定时间运行，根据预先设置的规则可以一次运行也可以周期运行。
 
