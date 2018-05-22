@@ -21,6 +21,7 @@
         - 通过证书导出三级CA公钥
         - 测试三级CA签发证书-给nginx颁发证书
 - 总结
+- 扩展测试nginx的双向ssl认证
 - 问题
     - 问题一
     - 问题二
@@ -582,12 +583,66 @@ IE表现：
     如果要认证第一个nginx，需要导入demoCA cert
     如果要认证第二个nginx，需要导入demoCA cert和2ndca cert
     如果要认证第三个nginx，需要导入demoCA cert和2ndca cert和3rdca cert
-
+<br>
 curl的表现：
 
     在curl --cacert 制定nginx证书颁发机构的ca cert即可，不需要到rootca（即根ca证书）
 
 但是无论哪种情况下，也不是只拿着rootca的证书就能完成客户端ca的校验的。
+
+
+# 扩展测试nginx的双向ssl认证
+使用2ndca的cert和key左外 nginx客户的cert和key，ca中心cert使用 democa的cert。配置如下：
+
+```
+/etc/nginx/nginx.conf
+        ssl on;
+        ssl_certificate /root/workspace/ssl/openssl/nginx/nginx-cert.crt;
+        ssl_certificate_key /root/workspace/ssl/openssl/nginx/nginx.key;
+        ssl_client_certificate /root/workspace/ssl/openssl/demoCA/cacert.crt;
+        ssl_verify_client on;
+其中 ssl_client_certificate /root/workspace/ssl/openssl/demoCA/cacert.crt;; 的意思是使用 CA 证书来验证请求带的客户端证书是否是该 CA 签发的。
+
+```
+```
+root@u-s1:~/workspace/ssl/openssl# curl -I --cert ./2ndca/cacert.crt --key ./2ndca/ca.key  --cacert ./demoCA/cacert.crt https://192.168.178.137
+HTTP/1.1 200 OK
+Server: nginx/1.10.3 (Ubuntu)
+Date: Tue, 22 May 2018 14:52:43 GMT
+Content-Type: text/html
+Content-Length: 612
+Last-Modified: Tue, 22 May 2018 07:10:27 GMT
+Connection: keep-alive
+ETag: "5b03c263-264"
+Accept-Ranges: bytes
+
+root@u-s1:~/workspace/ssl/openssl# 
+
+```
+```
+原理：
+    通过democa颁发两对公钥私钥对，其中公钥通过证书方式提供。
+
+        client                          server
+
+请求    client cert      ---》   
+
+                        《---            server cert
+       客户端通过democa判断server cert合法性
+                                        server通过demeca校验client cert合法性
+
+以上验证通过以后
+       客户端从server cert中拿到 server的公钥
+                                        server从client cert中能到 client的公钥
+
+选择任何一对公钥私钥将对称加密的密码通知client和server，密码协调工作
+
+然后对称加密传输开始，数据通信开始
+
+备注：以上逻辑简化了https的协议，此处只是示意。
+
+```
+
 
                                       
 # 问题
