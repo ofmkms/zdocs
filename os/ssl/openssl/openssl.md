@@ -25,6 +25,7 @@
 - 问题
     - 问题一
     - 问题二
+    - 问题三
 - 感谢
 
 <!-- /MarkdownTOC -->
@@ -592,7 +593,8 @@ curl的表现：
 
 
 # 扩展测试nginx的双向ssl认证
-使用2ndca的cert和key左外 nginx客户的cert和key，ca中心cert使用 democa的cert。配置如下：
+
+使用二级CA（2ndca）的私钥和证书作为本测试的客户端证书，2ndca的cert和key作为nginx客户的cert和key，ca中心cert使用 democa的cert，服务端使用democa颁发给nginx的证书（第一个nginx的证书），配置如下：
 
 ```
 /etc/nginx/nginx.conf
@@ -618,6 +620,113 @@ Accept-Ranges: bytes
 
 root@u-s1:~/workspace/ssl/openssl# 
 
+root@u-s1:~/workspace/ssl/openssl# curl  -v --cert ./2ndca/cacert.crt --key ./2ndca/ca.key  --cacert ./demoCA/cacert.crt https://192.168.178.137
+* Rebuilt URL to: https://192.168.178.137/
+*   Trying 192.168.178.137...
+* Connected to 192.168.178.137 (192.168.178.137) port 443 (#0)
+* found 1 certificates in ./demoCA/cacert.crt
+* found 692 certificates in /etc/ssl/certs
+* ALPN, offering http/1.1
+* SSL connection using TLS1.2 / ECDHE_RSA_AES_128_GCM_SHA256
+*    server certificate verification OK
+*    server certificate status verification SKIPPED
+*    common name: 192.168.178.137 (matched)
+*    server certificate expiration date OK
+*    server certificate activation date OK
+*    certificate public key: RSA
+*    certificate version: #3
+*    subject: C=CN,ST=Beijing,O=ZOrg,OU=ZOrgUnit,CN=192.168.178.137
+*    start date: Tue, 22 May 2018 08:29:21 GMT
+*    expire date: Wed, 22 May 2019 08:29:21 GMT
+*    issuer: C=CN,ST=Beijing,L=Beijing,O=CAOrg,OU=CAOrgUnit,CN=CACN,EMAIL=caadmin@sina.com
+*    compression: NULL
+* ALPN, server accepted to use http/1.1
+> GET / HTTP/1.1
+> Host: 192.168.178.137
+> User-Agent: curl/7.47.0
+> Accept: */*
+> 
+< HTTP/1.1 200 OK
+< Server: nginx/1.10.3 (Ubuntu)
+< Date: Tue, 22 May 2018 15:05:23 GMT
+< Content-Type: text/html
+< Content-Length: 612
+< Last-Modified: Tue, 22 May 2018 07:10:27 GMT
+< Connection: keep-alive
+< ETag: "5b03c263-264"
+< Accept-Ranges: bytes
+< 
+<!DOCTYPE html>
+<html>
+<head>
+<title>Welcome to nginx!</title>
+<style>
+    body {
+        width: 35em;
+        margin: 0 auto;
+        font-family: Tahoma, Verdana, Arial, sans-serif;
+    }
+</style>
+</head>
+<body>
+<h1>Welcome to nginx!</h1>
+<p>If you see this page, the nginx web server is successfully installed and
+working. Further configuration is required.</p>
+
+<p>For online documentation and support please refer to
+<a href="http://nginx.org/">nginx.org</a>.<br/>
+Commercial support is available at
+<a href="http://nginx.com/">nginx.com</a>.</p>
+
+<p><em>Thank you for using nginx.</em></p>
+</body>
+</html>
+* Connection #0 to host 192.168.178.137 left intact
+root@u-s1:~/workspace/ssl/openssl# 
+root@u-s1:~/workspace/ssl/openssl# curl  -v --cacert ./demoCA/cacert.crt https://192.168.178.137
+* Rebuilt URL to: https://192.168.178.137/
+*   Trying 192.168.178.137...
+* Connected to 192.168.178.137 (192.168.178.137) port 443 (#0)
+* found 1 certificates in ./demoCA/cacert.crt
+* found 692 certificates in /etc/ssl/certs
+* ALPN, offering http/1.1
+* SSL connection using TLS1.2 / ECDHE_RSA_AES_128_GCM_SHA256
+*    server certificate verification OK
+*    server certificate status verification SKIPPED
+*    common name: 192.168.178.137 (matched)
+*    server certificate expiration date OK
+*    server certificate activation date OK
+*    certificate public key: RSA
+*    certificate version: #3
+*    subject: C=CN,ST=Beijing,O=ZOrg,OU=ZOrgUnit,CN=192.168.178.137
+*    start date: Tue, 22 May 2018 08:29:21 GMT
+*    expire date: Wed, 22 May 2019 08:29:21 GMT
+*    issuer: C=CN,ST=Beijing,L=Beijing,O=CAOrg,OU=CAOrgUnit,CN=CACN,EMAIL=caadmin@sina.com
+*    compression: NULL
+* ALPN, server accepted to use http/1.1
+> GET / HTTP/1.1
+> Host: 192.168.178.137
+> User-Agent: curl/7.47.0
+> Accept: */*
+> 
+< HTTP/1.1 400 Bad Request
+< Server: nginx/1.10.3 (Ubuntu)
+< Date: Tue, 22 May 2018 15:11:50 GMT
+< Content-Type: text/html
+< Content-Length: 262
+< Connection: close
+< 
+<html>
+<head><title>400 No required SSL certificate was sent</title></head>
+<body bgcolor="white">
+<center><h1>400 Bad Request</h1></center>
+<center>No required SSL certificate was sent</center>
+<hr><center>nginx/1.10.3 (Ubuntu)</center>
+</body>
+</html>
+* Closing connection 0
+root@u-s1:~/workspace/ssl/openssl# 
+
 ```
 ```
 原理：
@@ -641,7 +750,15 @@ root@u-s1:~/workspace/ssl/openssl#
 
 备注：以上逻辑简化了https的协议，此处只是示意。
 
+
+
 ```
+
+其中如何使用IE测试双向认证的方法：
+将客户端的证书和key转换成IE认识的格式
+　　　　openssl pkcs12 -export -clcerts -in client.crt -inkey client.key -out client.pfx
+并且导入到IE，在IE访问https://192.169.178.137的时候提示选择提交的client证书，本测试是CA2CN证书，即二级CA的证书。
+
 
 
                                       
@@ -670,7 +787,17 @@ organizationName        = supplied
 方法：CMD--》MMC--》添加删除管理单元--》证书 可以看到，可以维护。
 
 
+## 问题三
+如果客户端是IE，客户端key和cert怎么提供给IE
+
+方法：
+openssl pkcs12 -export -clcerts -in ./2ndca/cacert.crt -inkey ./2ndca/ca.key -out ie-client.pfx
+
+
 # 感谢
+
 http://blog.chinaunix.net/uid-20553497-id-3163297.html
+
+https://www.cnblogs.com/vincentfu/p/5475248.html
 
 
