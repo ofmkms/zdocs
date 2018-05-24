@@ -823,6 +823,8 @@ create_cert.sh
 #  ./create_cert.sh harbor 192.168.178.167 demoCA
 # 通过二级CA创建harbor的证书的命令，其中harbor的证书CN是IP：
 #  ./create_cert.sh harbor2 192.168.178.167 2ndca
+#  
+# author: forcl@sina.com
 #
 
 if [ "$#" -ne "3" ]; then
