@@ -15,4 +15,6 @@ flanneld,
 客户端
 kubectl
 
+# 环境准备
+
 

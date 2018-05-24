@@ -33,6 +33,7 @@
     - 问题一
     - 问题二
     - 问题三
+- 工具
 - 感谢
 
 <!-- /MarkdownTOC -->
@@ -811,6 +812,63 @@ organizationName        = supplied
 方法：
 openssl pkcs12 -export -clcerts -in ./2ndca/cacert.crt -inkey ./2ndca/ca.key -out ie-client.pfx
 
+# 工具
+
+create_cert.sh
+
+``` shell
+#!/bin/bash
+#
+# 通过demoCA创建harbor证书的命令，其中harbor证书的CN是IP：
+#  ./create_cert.sh harbor 192.168.178.167 demoCA
+# 通过二级CA创建harbor的证书的命令，其中harbor的证书CN是IP：
+#  ./create_cert.sh harbor2 192.168.178.167 2ndca
+#
+
+if [ "$#" -ne "3" ]; then
+    echo "usage: $0 <certname> <cnname> <caname>"
+    exit 1
+fi
+
+CERT_NM=$1
+CN_NM=$2
+CA_NM=$3
+
+if [ "x$CERT_NM" == "x" ];then
+   CERT_NM=test
+fi
+if [ "x$CN_NM" == "x" ];then
+   CN_NM=192.168.178.137
+fi
+if [ "x$CA_NM" == "x" ];then
+    CA_NM=demoCA
+fi
+echo "creating dir $CERT_NM."
+mkdir $CERT_NM
+
+echo "create $CERT_NM private key."
+openssl genrsa -out ./$CERT_NM/$CERT_NM.key 1024/2048
+
+echo "create cert request."
+openssl req -new -key ./$CERT_NM/$CERT_NM.key -out ./$CERT_NM/$CERT_NM.csr -subj "/C=CN/ST=Beijing/L=Beijing/O=ZOrg/OU=ZOrgUnit/CN=$CN_NM"
+
+echo "create cert." 
+if [ "x$CA_NM" == "xdemoCA" ];then
+    openssl ca -extensions v3_ca -batch -in ./$CERT_NM/$CERT_NM.csr -days 365 -out ./$CERT_NM/$CERT_NM.crt -cert ./$CA_NM/cacert.crt -keyfile ./$CA_NM/private/ca.key
+else
+    openssl ca -extensions v3_ca -batch -in ./$CERT_NM/$CERT_NM.csr -days 365 -out ./$CERT_NM/$CERT_NM.crt -cert ./$CA_NM/cacert.crt -keyfile ./$CA_NM/ca.key
+fi
+
+echo "create pub key."
+openssl x509 -in ./$CERT_NM/$CERT_NM.crt -pubkey >> ./$CERT_NM/$CERT_NM-pub.key
+
+
+#openssl genrsa -out ./harbor/harbor.key 1024/2048
+#openssl req -new -key ./harbor/harbor.key -out ./harbor/harbor.csr -subj "/C=CN/ST=Beijing/L=Beijing/O=ZOrg/OU=ZOrgUnit/CN=197.168.178.167"
+#openssl ca -extensions v3_ca -batch  -in ./harbor/harbor.csr -days 365 -out ./harbor/harbor.crt -cert ./demoCA/cacert.crt -keyfile ./demoCA/private/ca.key
+#openssl x509 -in ./harbor/harbor.crt -pubkey >> ./harbor/harbor-pub.key
+
+```
 
 # 感谢
 
