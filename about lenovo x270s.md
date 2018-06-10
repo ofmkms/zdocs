@@ -19,6 +19,8 @@ x270s
 ### 选择keyboard input method system是 fcitx
 ### 系统重启
 ```
+sudo systemctl restart lightdm.service  #推荐
+或者
 reboot
 ```
 ### 配输入法
@@ -41,7 +43,7 @@ im-config -s ibus
 ```
 说明：修改了输入法引擎需要重启X窗口系统
 ```
-sudo systemctl restart lightdm.service
+sudo systemctl restart lightdm.service  #推荐
 或者
 reboot
 ```
@@ -54,5 +56,6 @@ sudo apt install ibus-pinyin
 
 ### 测试
 
-##注意：
-	sublime 3对中文输入支持比较差！
+## 注意：
+	1. sublime 3对中文输入支持比较差！
+	2. IBus和fcitx可以动态切换;步骤 Language support 更改输入法引擎--》sudo systemctl restart lightdm.service  --》配置输入法（如果需要）
